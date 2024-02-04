@@ -1,6 +1,6 @@
 {
   "name": "glean-embedded-search",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A React context provider to load the Glean JS SDK",
   "repository": {
     "type": "git",
