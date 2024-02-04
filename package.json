@@ -1,7 +1,7 @@
 {
   "name": "glean-embedded-search",
   "version": "0.0.1",
-  "description": "A template for building a library with tsup",
+  "description": "A React context provider to load the Glean JS SDK",
   "repository": {
     "type": "git",
     "url": "https://github.com/scalvert/glean-embedded-search.git"
@@ -9,9 +9,16 @@
   "license": "MIT",
   "author": "Steve Calvert <steve.calvert@gmail.com>",
   "type": "module",
-  "main": "lib/index.cjs",
-  "module": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "lib"
   ],
@@ -22,9 +29,6 @@
     "lint:format": "prettier  --loglevel warn --write \"./**/*.{ts,tsx,css,md,json}\" ",
     "lint:types": "tsc",
     "test": "vitest run"
-  },
-  "dependencies": {
-    "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@release-it-plugins/lerna-changelog": "^5.0.0",
@@ -46,6 +50,7 @@
     "release-it": "^15.5.0",
     "rimraf": "^5.0.5",
     "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   },
   "peerDependencies": {
