@@ -1,3 +1,4 @@
+import { useScript } from '@uidotdev/usehooks';
 import {
   createContext,
   FC,
@@ -8,18 +9,16 @@ import {
   useState,
 } from 'react';
 
-import { useScript } from './hooks/useScript';
 import { EmbeddedSearchHandle, ModalSearchOptions } from './types';
 
 interface EmbeddedSearchContextProps {
-  loaded: boolean;
+  status: 'unknown' | 'loading' | 'ready' | 'error';
   embeddedSearchHandle: EmbeddedSearchHandle | null;
 }
 
 const EmbeddedSearchContext = createContext<EmbeddedSearchContextProps | null>(null);
 
 interface EmbeddedSearchProviderProps {
-  id?: string;
   children: ReactNode;
   domain: string;
   elementId: string;
@@ -38,7 +37,6 @@ function getDomain(domain: string) {
 }
 
 export const EmbeddedSearchProvider: FC<EmbeddedSearchProviderProps> = ({
-  id = 'glean-sdk',
   children,
   domain,
   elementId,
@@ -47,13 +45,12 @@ export const EmbeddedSearchProvider: FC<EmbeddedSearchProviderProps> = ({
 }) => {
   const [embeddedSearchHandle, setEmbeddedSearchHandle] =
     useState<EmbeddedSearchHandle | null>(null);
-  const { loaded, error } = useScript({
-    id,
-    src: `https://${getDomain(domain)}/embedded-search-latest.min.js`,
+  const status = useScript(`https://${getDomain(domain)}/embedded-search-latest.min.js`, {
+    removeOnUnmount: false,
   });
 
   useEffect(() => {
-    if (loaded && window.EmbeddedSearch) {
+    if (status === 'ready' && typeof window.EmbeddedSearch !== 'undefined') {
       const element = document.getElementById(elementId);
 
       if (!element) {
@@ -64,14 +61,14 @@ export const EmbeddedSearchProvider: FC<EmbeddedSearchProviderProps> = ({
 
       setEmbeddedSearchHandle(handle);
     }
-  }, [loaded, elementId, options]);
+  }, [status, elementId, options]);
 
-  if (error) {
+  if (status === 'error') {
     return fallbackComponent;
   }
 
   return (
-    <EmbeddedSearchContext.Provider value={{ loaded, embeddedSearchHandle }}>
+    <EmbeddedSearchContext.Provider value={{ status, embeddedSearchHandle }}>
       {children}
     </EmbeddedSearchContext.Provider>
   );

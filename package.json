@@ -78,5 +78,8 @@
       "tokenRef": "GITHUB_AUTH"
     }
   },
-  "url": "https://github.com/orabazu/tsup-libary-template"
+  "url": "https://github.com/orabazu/tsup-libary-template",
+  "dependencies": {
+    "@uidotdev/usehooks": "^2.4.1"
+  }
 }
