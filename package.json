@@ -1,7 +1,7 @@
 {
   "name": "glean-embedded-search",
   "version": "0.0.3",
-  "description": "A React context provider to load the Glean JS SDK",
+  "description": "A React hook for loading the Glean JS SDK for embedded search",
   "repository": {
     "type": "git",
     "url": "https://github.com/scalvert/glean-embedded-search.git"
@@ -29,6 +29,9 @@
     "lint:format": "prettier  --loglevel warn --write \"./**/*.{ts,tsx,css,md,json}\" ",
     "lint:types": "tsc",
     "test": "vitest run"
+  },
+  "dependencies": {
+    "@uidotdev/usehooks": "^2.4.1"
   },
   "devDependencies": {
     "@release-it-plugins/lerna-changelog": "^5.0.0",
@@ -78,8 +81,5 @@
       "tokenRef": "GITHUB_AUTH"
     }
   },
-  "url": "https://github.com/orabazu/tsup-libary-template",
-  "dependencies": {
-    "@uidotdev/usehooks": "^2.4.1"
-  }
+  "url": "https://github.com/orabazu/tsup-libary-template"
 }

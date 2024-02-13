@@ -1,1 +1,3 @@
-export { EmbeddedSearchProvider, useEmbeddedSearch } from './EmbeddedSearchProvider';
+export * from './types';
+export type { UseEmbeddedSearchResult } from './useEmbeddedSearch';
+export { useEmbeddedSearch } from './useEmbeddedSearch';

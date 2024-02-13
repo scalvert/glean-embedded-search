@@ -1,6 +1,6 @@
 # glean-embedded-search
 
-This package provides a React tools for loading and providing the Glean JS SDK for embedded search. It includes a context provider for embedded search and a set of hooks to interact with this context.
+A React hook for loading the Glean JS SDK for embedded search.
 
 ## Installation
 
@@ -16,102 +16,40 @@ yarn add glean-embedded-search
 
 ## Usage
 
-First, wrap your application with the EmbeddedSearchProvider, passing in the :
+### `useEmbeddedSearch` hook
+
+The useEmbeddedSearch hook provides access to the embedded search context. It returns an object with the following properties:
+
+- `status`: The status of the embedded search module. It can be one of the following values: 'loading', 'error', or 'ready'.
+- `embeddedSearch`: The embedded search handle, which provides access to the Glean JS SDK API.
 
 ```jsx
-import { EmbeddedSearchProvider } from './EmbeddedSearchProvider';
+import React, { useEffect } from 'react';
+import { useEmbeddedSearch } from 'glean-embedded-search';
 
-const App: React.FC = () => {
-  const options: ModalSearchOptions = {
-    // Define your options here. For a full list of options, see the API section below.
-  };
+const MyCustomSearchComponent = () => {
+  const { embeddedSearch, status } = useEmbeddedSearch();
 
-  return (
-    <EmbeddedSearchProvider domain="YOUR_GLEAN_DOMAIN" elementId="search-box" options={options}>
-      {/* your app goes here */}
-    </EmbeddedSearchProvider>
-  );
+  useEffect(() => {
+    if (status === 'ready' && embeddedSearch) {
+      // User provides their own initialization logic here
+      const element = document.getElementById('my-search-element');
+      if (element) {
+        // Example of how a user might initialize EmbeddedSearch
+        embeddedSearch.attach(element, {/* options here */});
+      }
+    }
+  }, [status, embeddedSearch]);
+
+  if (status === 'loading') return <div>Loading search...</div>;
+  if (status === 'error') return <div>Error loading the search functionality.</div>;
+  return <div id="my-search-element">Search will be initialized here.</div>;
 };
 
-export default App;
-```
+export default MyCustomSearchComponent;
 
-Then, in your components, you can use the useEmbeddedSearch hook to access the embeddedSearchHandle and other properties of the embedded search context. For example, to focus the search input, you can use the embeddedSearchHandle.focus() method. Here's an example of how to use the useEmbeddedSearch hook in a component:
-
-```jsx
-import { useEmbeddedSearch } from './EmbeddedSearchProvider';
-
-export default const SearchComponent: React.FC = () => {
-  const { loaded, embeddedSearchHandle } = useEmbeddedSearch();
-
-  if (!loaded) {
-    return <div>Loading...</div>;
-  }
-
-  // Use embeddedSearchHandle here, for example, embeddedSearchHandle.focus()
-
-  return (
-    <div>
-      {/* Your component logic */}
-    </div>
-  );
-};
 ```
 
 ## API
 
-### `EmbeddedSearchProvider`
-
-# `EmbeddedSearchProvider` Props
-
-`EmbeddedSearchProvider` is a React component that initializes the EmbeddedSearch API. Below is the documentation for its props:
-
-| Prop        | Type                 | Description                                                    | Required |
-| ----------- | -------------------- | -------------------------------------------------------------- | :------: |
-| `children`  | `React.ReactNode`    | The child components that `EmbeddedSearchProvider` will wrap.  |   Yes    |
-| `domain`    | `string`             | The domain from which the EmbeddedSearch script is loaded.     |   Yes    |
-| `elementId` | `string`             | The ID of the DOM element to which EmbeddedSearch is attached. |   Yes    |
-| `options`   | `ModalSearchOptions` | Optional configuration options for EmbeddedSearch.             |    No    |
-
-## `ModalSearchOptions` Type
-
-The `options` prop accepts an object of type `ModalSearchOptions`, which is structured as follows:
-
-| Property                    | Type                                   | Description                                  | Required |
-| --------------------------- | -------------------------------------- | -------------------------------------------- | :------: |
-| `authToken`                 | `AuthTokenDetails`                     | Authentication token details.                |    No    |
-| `backend`                   | `string`                               | Backend configuration.                       |    No    |
-| `datasource`                | `string`                               | Datasource configuration.                    |    No    |
-| `datasourcesFilter`         | `string[]`                             | Filters for datasources.                     |    No    |
-| `disableAnalytics`          | `boolean`                              | Flag to disable analytics.                   |    No    |
-| `domainsToOpenInCurrentTab` | `string[]`                             | Domains to open in the current tab.          |    No    |
-| `enableActivityLogging`     | `boolean`                              | Flag to enable activity logging.             |    No    |
-| `hideAutocomplete`          | `boolean`                              | Flag to hide autocomplete.                   |    No    |
-| `key`                       | `string`                               | Key for configuration.                       |    No    |
-| `locale`                    | `string`                               | Locale configuration.                        |    No    |
-| `onAuthTokenRequired`       | `() => void`                           | Callback for when an auth token is required. |    No    |
-| `onChat`                    | `(chatId?) => void`                    | Callback for chat interactions.              |    No    |
-| `onDetach`                  | `() => void`                           | Callback for when the search is detached.    |    No    |
-| `onSearch`                  | `(query) => void`                      | Callback for search interactions.            |   Yes    |
-| `query`                     | `string`                               | Initial query for the search.                |    No    |
-| `showNativeSearchToggle`    | `boolean`                              | Flag to show native search toggle.           |    No    |
-| `theme`                     | `Partial<Record<ThemeVariant, Theme>>` | Theme configuration.                         |    No    |
-| `themeVariant`              | `ThemeVariantOrAuto`                   | The theme variant to use.                    |    No    |
-| `urlsToOpenInCurrentTab`    | `string[]`                             | URLs to open in the current tab.             |    No    |
-| `webAppUrl`                 | `string`                               | Web app URL.                                 |    No    |
-
-### `AuthTokenDetails` Type
-
-`AuthTokenDetails` is used within `ModalSearchOptions` and is defined as:
-
-| Property         | Type     | Description                                      | Required |
-| ---------------- | -------- | ------------------------------------------------ | :------: |
-| `expirationTime` | `number` | The expiration time of the authentication token. |   Yes    |
-| `token`          | `string` | The authentication token.                        |   Yes    |
-
-### `ThemeVariant` Type
-
-`ThemeVariant` is a union type for theme variants and includes the following values:
-
-- `light`
-- `dark`
+Documentation for the API can be found in the [Glean JS SDK documentation](https://app.glean.com/meta/browser_api/index.html).
